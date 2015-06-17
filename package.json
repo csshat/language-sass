@@ -53,11 +53,6 @@
       "type": "boolean",
       "default": true
     },
-    "selector": {
-      "description": "Wrap code in a css selector.",
-      "type": "boolean",
-      "default": false
-    },
     "mixinLibrary": {
       "type": "select",
       "options": [
@@ -91,6 +86,11 @@
       "validate": "setNumberValue",
       "showFor": "unit",
       "showWhen": "rem"
+    },
+    "selector": {
+      "description": "Wrap code in a css selector.",
+      "type": "boolean",
+      "default": false
     },
     "selectorType": {
       "type": "select",

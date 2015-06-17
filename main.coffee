@@ -119,9 +119,12 @@ class Sass
 
         if not @options.inheritFontStyles or textStyle.base
           if @options.showAbsolutePositions
-            declaration('position', 'absolute')
-            declaration('left', @bounds.left, unit)
-            declaration('top', @bounds.top, unit)
+            if @options.mixinLibrary is 'Bourbon'
+              mixin('position', "absolute, #{unit(@bounds.top)} null null #{unit(@bounds.left)}")
+            else
+              declaration('position', 'absolute')
+              declaration('left', @bounds.left, unit)
+              declaration('top', @bounds.top, unit)
 
           if @bounds
             if @options.mixinLibrary is 'Bourbon'
@@ -149,9 +152,12 @@ class Sass
       startSelector(@name)
 
       if @options.showAbsolutePositions
-        declaration('position', 'absolute')
-        declaration('left', @bounds.left, unit)
-        declaration('top', @bounds.top, unit)
+        if @options.mixinLibrary is 'Bourbon'
+          mixin('position', "absolute, #{unit(@bounds.top)} null null #{unit(@bounds.left)}")
+        else
+          declaration('position', 'absolute')
+          declaration('left', @bounds.left, unit)
+          declaration('top', @bounds.top, unit)
 
       if @bounds
         if @options.mixinLibrary is 'Bourbon'
