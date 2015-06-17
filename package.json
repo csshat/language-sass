@@ -34,7 +34,7 @@
       "default": true
     },
     "scssSyntax": {
-      "description": "Enables curly braces and `@include` syntax for mixins.",
+      "description": "Enable curly braces and `@include` syntax for mixins.",
       "type": "boolean",
       "default": true
     },
