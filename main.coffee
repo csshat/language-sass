@@ -191,9 +191,9 @@ class Sass
         declaration('border', "#{unit(border.width)} #{border.style} #{convertColor(border.color)}")
 
       if @options.mixinLibrary is 'Compass'
-        mixin('border-radius', @radius, css.radius)
+        mixin('border-radius', @radius, _.partial(css.radius, unit))
       else
-        declaration('border-radius', @radius, css.radius)
+        declaration('border-radius', @radius, _.partial(css.radius, unit))
 
       if @shadows
         if @options.mixinLibrary is 'Compass'
