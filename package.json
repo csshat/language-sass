@@ -1,7 +1,7 @@
 {
   "name": "csshat-language-sass",
   "title": "Sass",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sass language",
   "main": "main",
   "scope": "source.scss",
