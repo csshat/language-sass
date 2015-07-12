@@ -85,6 +85,7 @@ class Sass
     declaration = _.partial(_declaration, $$, @options.scssSyntax)
     mixin = _.partial(_mixin, $$, @options.scssSyntax)
     comment = _.partial(_comment, $, @options)
+    boxModelDimension = _.partial(css.boxModelDimension, @options.boxSizing, if @borders then @borders[0].width else null)
 
     rootValue = switch @options.unit
       when 'px' then 0
@@ -167,14 +168,17 @@ class Sass
           declaration('top', @bounds.top, unit)
 
       if @bounds
+        width = boxModelDimension(@bounds.width)
+        height = boxModelDimension(@bounds.height)
+
         if @options.mixinLibrary is 'Bourbon'
-          if @bounds.width == @bounds.height
-            mixin('size', @bounds.width, unit)
+          if width == height
+            mixin('size', width, unit)
           else
-            mixin('size', "#{unit(@bounds.width)}, #{unit(@bounds.height)}")
+            mixin('size', "#{unit(width)}, #{unit(height)}")
         else
-          declaration('width', @bounds.width, unit)
-          declaration('height', @bounds.height, unit)
+          declaration('width', width, unit)
+          declaration('height', height, unit)
 
       if @options.mixinLibrary is 'Compass'
         mixin('opacity', @opacity)
