@@ -139,7 +139,7 @@ class Sass
               if @bounds.width == @bounds.height
                 mixin('size', @bounds.width, unit)
               else
-                mixin('size', "#{unit(@bounds.width)}, #{unit(@bounds.height)}")
+                mixin('size', "#{unit(@bounds.width)} #{unit(@bounds.height)}")
             else
               declaration('width', @bounds.width, unit)
               declaration('height', @bounds.height, unit)
@@ -175,7 +175,7 @@ class Sass
           if width == height
             mixin('size', width, unit)
           else
-            mixin('size', "#{unit(width)}, #{unit(height)}")
+            mixin('size', "#{unit(width)} #{unit(height)}")
         else
           declaration('width', width, unit)
           declaration('height', height, unit)
