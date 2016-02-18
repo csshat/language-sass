@@ -214,5 +214,6 @@ class Sass
 
       endSelector()
 
+metadata = require './package.json'
 
-module.exports = {defineVariable, renderVariable, setNumberValue, renderClass: Sass}
+module.exports = {defineVariable, renderVariable, setNumberValue, renderClass: Sass, metadata}
