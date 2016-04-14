@@ -78,6 +78,30 @@ setNumberValue = (number) ->
     return converted
 
 
+declareAbsolutePosition = (declaration, mixinLibrary, bounds, unit) ->
+  if mixinLibrary is 'Bourbon'
+    mixin('position', "absolute, #{unit(bounds.top)} null null #{unit(bounds.left)}")
+  else
+    declaration('position', 'absolute')
+    declaration('left', bounds.left, unit)
+    declaration('top', bounds.top, unit)
+
+
+declareDimensions = (declaration, bounds, unit) ->
+  declaration('width', unit(bounds.width))
+  declaration('height', unit(bounds.height))
+
+
+declareSizeMixinOrDimensions = (mixinLibrary, mixin, declaration, bounds, unit) ->
+  if mixinLibrary is 'Bourbon'
+    if bounds.width == bounds.height
+      mixin('size', bounds.width, unit)
+    else
+      mixin('size', "#{unit(bounds.width)}, #{unit(bounds.height)}")
+  else
+    declareDimensions(declaration, bounds, unit)
+
+
 class Sass
 
   render: ($) ->
@@ -112,47 +136,47 @@ class Sass
     endSelector = _.partial(_endSelector, $, @options.scssSyntax, @options.selector)
 
     if @type == 'textLayer'
-      for textStyle in css.prepareTextStyles(@options.inheritFontStyles, @baseTextStyle, @textStyles)
+      if @baseTextStyle and @textStyles
+        for textStyle in css.prepareTextStyles(@options.inheritFontStyles, @baseTextStyle, @textStyles)
 
-        if @options.showComments
-          comment(css.textSnippet(@text, textStyle))
+          if @options.showComments
+            comment(css.textSnippet(@text, textStyle))
 
-        if @options.selector
-          if textStyle.ranges
-            selectorText = utils.textFromRange(@text, textStyle.ranges[0])
-          else
-            selectorText = @name
-
-          startSelector(selectorText)
-
-        if not @options.inheritFontStyles or textStyle.base
-          if @options.showAbsolutePositions
-            if @options.mixinLibrary is 'Bourbon'
-              mixin('position', "absolute, #{unit(@bounds.top)} null null #{unit(@bounds.left)}")
+          if @options.selector
+            if textStyle.ranges
+              selectorText = utils.textFromRange(@text, textStyle.ranges[0])
             else
-              declaration('position', 'absolute')
-              declaration('left', @bounds.left, unit)
-              declaration('top', @bounds.top, unit)
+              selectorText = @name
 
-          if @bounds
-            if @options.mixinLibrary is 'Bourbon'
-              if @bounds.width == @bounds.height
-                mixin('size', @bounds.width, unit)
-              else
-                mixin('size', "#{unit(@bounds.width)} #{unit(@bounds.height)}")
-            else
-              declaration('width', @bounds.width, unit)
-              declaration('height', @bounds.height, unit)
+            startSelector(selectorText)
 
-          mixin('opacity', @opacity)
+          if not @options.inheritFontStyles or textStyle.base
+            if @options.showAbsolutePositions
+              declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
 
-          if @shadows
-            declaration('text-shadow', css.convertTextShadows(convertColor, unit, @shadows))
+            if @bounds
+              declareSizeMixinOrDimensions(@options.mixinLibrary, mixin, declaration, @bounds, unit)
 
-        fontStyles(textStyle)
+            mixin('opacity', @opacity)
+
+            if @shadows
+              declaration('text-shadow', css.convertTextShadows(convertColor, unit, @shadows))
+
+          fontStyles(textStyle)
+
+          endSelector()
+      else
+        startSelector(@name)
+        comment('Text dimensions')
+        if @options.showAbsolutePositions
+          declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
+
+        if @bounds
+          declareSizeMixinOrDimensions(@options.mixinLibrary, mixin, declaration, @bounds, unit)
 
         endSelector()
-        $.newline()
+
+      $.newline()
     else
       if @options.showComments
         comment("Style for \"#{utils.trim(@name)}\"")
@@ -160,25 +184,13 @@ class Sass
       startSelector(@name)
 
       if @options.showAbsolutePositions
-        if @options.mixinLibrary is 'Bourbon'
-          mixin('position', "absolute, #{unit(@bounds.top)} null null #{unit(@bounds.left)}")
-        else
-          declaration('position', 'absolute')
-          declaration('left', @bounds.left, unit)
-          declaration('top', @bounds.top, unit)
+        declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
 
       if @bounds
         width = boxModelDimension(@bounds.width)
         height = boxModelDimension(@bounds.height)
 
-        if @options.mixinLibrary is 'Bourbon'
-          if width == height
-            mixin('size', width, unit)
-          else
-            mixin('size', "#{unit(width)} #{unit(height)}")
-        else
-          declaration('width', width, unit)
-          declaration('height', height, unit)
+        declareSizeMixinOrDimensions(@options.mixinLibrary, mixin, declaration, { width, height }, unit)
 
       if @options.mixinLibrary is 'Compass'
         mixin('opacity', @opacity)
