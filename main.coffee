@@ -78,9 +78,9 @@ setNumberValue = (number) ->
     return converted
 
 
-declareAbsolutePosition = (declaration, mixinLibrary, bounds, unit) ->
+declareAbsolutePosition = (declaration, mixin, mixinLibrary, bounds, unit) ->
   if mixinLibrary is 'Bourbon'
-    mixin('position', "absolute, #{unit(bounds.top)} null null #{unit(bounds.left)}")
+    mixin('position', "absolute, #{unit(bounds.top)} 0 0 #{unit(bounds.left)}")
   else
     declaration('position', 'absolute')
     declaration('left', bounds.left, unit)
@@ -152,7 +152,7 @@ class Sass
 
           if not @options.inheritFontStyles or textStyle.base
             if @options.showAbsolutePositions
-              declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
+              declareAbsolutePosition(declaration, mixin, @options.mixinLibrary, @bounds, unit)
 
             if @bounds
               declareSizeMixinOrDimensions(@options.mixinLibrary, mixin, declaration, @bounds, unit)
@@ -169,7 +169,7 @@ class Sass
         startSelector(@name)
         comment('Text dimensions')
         if @options.showAbsolutePositions
-          declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
+          declareAbsolutePosition(declaration, mixin, @options.mixinLibrary, @bounds, unit)
 
         if @bounds
           declareSizeMixinOrDimensions(@options.mixinLibrary, mixin, declaration, @bounds, unit)
@@ -184,7 +184,7 @@ class Sass
       startSelector(@name)
 
       if @options.showAbsolutePositions
-        declareAbsolutePosition(declaration, @options.mixinLibrary, @bounds, unit)
+        declareAbsolutePosition(declaration, mixin, @options.mixinLibrary, @bounds, unit)
 
       if @bounds
         width = boxModelDimension(@bounds.width)
