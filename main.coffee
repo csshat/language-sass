@@ -137,6 +137,11 @@ class Sass
 
     if @type == 'textLayer'
       if @baseTextStyle and @textStyles
+
+        fontName = @baseTextStyle.font?.name
+        if fontName
+          @baseTextStyle.font.name = fontName.replace(/([A-Z])/g, ' $1').trim()
+
         for textStyle in css.prepareTextStyles(@options.inheritFontStyles, @baseTextStyle, @textStyles)
 
           if @options.showComments
