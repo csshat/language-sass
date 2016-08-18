@@ -49,7 +49,7 @@ _comment = ($, showComments, text) ->
   $ "// #{text}"
 
 
-defineVariable = (name, value, options) ->
+defineVariable = (name, value, options = {}) ->
   semicolon = if options.scssSyntax then ';' else ''
   "$#{name}: #{value}#{semicolon}"
 
