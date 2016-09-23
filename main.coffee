@@ -148,7 +148,7 @@ class Sass
             comment(css.textSnippet(@text, textStyle))
 
           if @options.selector
-            if textStyle.ranges
+            if textStyle.ranges?[0]
               selectorText = utils.textFromRange(@text, textStyle.ranges[0])
             else
               selectorText = @name
